@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Induction | Learning Resource</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4a148c;
+            --secondary: #7b1fa2;
+            --accent: #ff4081;
+            --light: #f3e5f5;
+            --dark: #311b92;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --text: #311b92;
+            --bg-light: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+            max-width: 100%;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Floating background elements */
+        .floating-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            color: var(--primary);
+            font-size: 24px;
+            animation: float 20s infinite linear;
+        }
+        
+        .floating-bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(123, 31, 162, 0.1);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 8px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(123, 31, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 64, 129, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: inline-block;
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            padding: 0 10px;
+            word-wrap: break-word;
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            padding: 0 10px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            position: relative;
+            font-size: 1.5rem;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 20px 0 12px;
+            font-size: 1.3rem;
+        }
+        
+        h4 {
+            color: var(--primary);
+            margin: 15px 0 8px;
+            font-size: 1.1rem;
+        }
+        
+        .content-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 25px 0;
+            width: 100%;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .intro-card {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 4px solid var(--success);
+        }
+        
+        .formula-box {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 12px 0;
+            text-align: center;
+            font-family: 'Cambria Math', serif;
+            font-size: 1rem;
+            border-left: 4px solid var(--primary);
+            overflow-x: auto;
+        }
+        
+        .example-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid var(--secondary);
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .step-box {
+            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 4px solid #009688;
+        }
+        
+        .principle-box {
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .diagram-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .diagram {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 0.9rem;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 8px 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #27ae60);
+        }
+        
+        .quiz-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 4px solid var(--secondary);
+            width: 100%;
+        }
+        
+        .quiz-instructions {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            color: var(--accent);
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .options {
+            margin-left: 0;
+        }
+        
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #e3f2fd;
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .option.selected {
+            background-color: #bbdefb;
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .option.correct {
+            background-color: #c8e6c9;
+            border-left: 3px solid var(--success);
+        }
+        
+        .option.incorrect {
+            background-color: #ffcdd2;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .results {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 4px solid var(--success);
+            width: 100%;
+        }
+        
+        .score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--success);
+            margin: 12px 0;
+        }
+        
+        .feedback {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .strength {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .improvement {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .homework {
+            background: linear-gradient(135deg, #fce4ec, #f8bbd9);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 4px solid #e91e63;
+            width: 100%;
+        }
+        
+        .resource-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 40px;
+            border-top: 6px solid var(--accent);
+            width: 100%;
+        }
+        
+        .creator-link {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .creator-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .creator-link a:hover {
+            color: var(--accent);
+        }
+        
+        /* Tablet styles */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+                padding: 0 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            h3 {
+                font-size: 1.4rem;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .content-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+            
+            .wide-card {
+                grid-column: 1 / -1;
+            }
+            
+            table {
+                font-size: 1rem;
+                display: table;
+                overflow-x: visible;
+                white-space: normal;
+            }
+        }
+        
+        /* Desktop styles */
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+        }
+        
+        /* Large desktop styles */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        
+        /* Small mobile adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            header {
+                padding: 15px 0;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .resource-links {
+                flex-direction: column;
+            }
+        }
+        
+        /* Prevent horizontal scrolling */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Ensure all content fits within viewport */
+        img, table, .formula-box, .example-box {
+            max-width: 100%;
+        }
+        
+        /* Improve text readability on small screens */
+        p, li, td {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 767px) {
+            p, li, td {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background elements -->
+    <div class="floating-bg" id="floatingBg"></div>
+    
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-square-root-alt"></i>
+            </div>
+            <h1>Mathematical Induction</h1>
+            <p class="tagline">A Step-by-Step Proof Technique</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="content-grid">
+            <section class="card intro-card wide-card">
+                <h2>Welcome to Mathematical Induction!</h2>
+                <p>This resource will explore the powerful proof technique of mathematical induction. Get ready to learn about:</p>
+                <ul>
+                    <li>What mathematical induction is and why it's important</li>
+                    <li>The TAP method: Test, Assume, Prove</li>
+                    <li>Step-by-step examples with detailed explanations</li>
+                    <li>Common pitfalls and how to avoid them</li>
+                    <li>Applications of mathematical induction</li>
+                    <li>Practice problems with solutions</li>
+                </ul>
+            </section>
+            
+            <section class="card wide-card">
+                <h2>What is Mathematical Induction? 🤔</h2>
+                
+                <div class="definition-box">
+                    <p><strong>Mathematical Induction</strong> is a method of proving that a formula or statement is true for all natural numbers (n = 1, 2, 3, …).</p>
+                </div>
+                
+                <p>Think of it like a line of dominoes:</p>
+                <ul>
+                    <li>If you can knock over the first domino (prove it's true for n=1)</li>
+                    <li>And if each domino knocks over the next one (prove that if it's true for n=k, then it's true for n=k+1)</li>
+                    <li>Then all dominoes will fall (the statement is true for all natural numbers)</li>
+                </ul>
+                
+                <div class="principle-box">
+                    <p><strong>Key Principle:</strong> Mathematical induction allows us to prove infinitely many cases with just two steps!</p>
+                </div>
+            </section>
+            
+            <section class="card wide-card">
+                <h2>The TAP Method: Test, Assume, Prove 🎯</h2>
+                
+                <p>To prove a statement S(n) is true for all n ∈ ℕ using the TAP method:</p>
+                
+                <div class="step-box">
+                    <h3>Step 1: TEST (Base Case)</h3>
+                    <p>Prove that the statement is true when <strong>n = 1</strong>.</p>
+                    <p>This is like testing the first domino to make sure it falls.</p>
+                </div>
+                
+                <div class="step-box">
+                    <h3>Step 2: ASSUME (Inductive Hypothesis)</h3>
+                    <p>Assume the statement is true for some <strong>n = k</strong>.</p>
+                    <p>That is, assume S(k) is true.</p>
+                    <p>This is like assuming a domino falls.</p>
+                </div>
+                
+                <div class="step-box">
+                    <h3>Step 3: PROVE (Inductive Step)</h3>
+                    <p>Using the assumption, prove the statement is true for <strong>n = k + 1</strong>.</p>
+                    <p>That is, show S(k+1) is also true.</p>
+                    <p>This is like showing that if one domino falls, it will knock over the next one.</p>
+                </div>
+                
+                <div class="principle-box">
+                    <p><strong>Conclusion:</strong> If all three steps are successful, then the statement is true for all natural numbers n.</p>
+                </div>
+            </section>
+            
+            <section class="card wide-card">
+                <h2>Example 1: Sum of First n Natural Numbers</h2>
+                
+                <p>Let's prove that: <strong>1 + 2 + 3 + ... + n = n(n + 1)/2</strong> for all natural numbers n.</p>
+                
+                <div class="step-box">
+                    <h3>Step 1: TEST (Base Case)</h3>
+                    <p>Check if the formula works for n = 1:</p>
+                    <p>Left side: 1</p>
+                    <p>Right side: 1(1 + 1)/2 = 1(2)/2 = 2/2 = 1</p>
+                    <p>✅ Both sides equal, so the base case is true.</p>
+                </div>
+                
+                <div class="step-box">
+                    <h3>Step 2: ASSUME (Inductive Hypothesis)</h3>
+                    <p>Assume the formula is true for n = k:</p>
+                    <p><strong>1 + 2 + 3 + ... + k = k(k + 1)/2</strong></p>
+                    <p>This is our assumption that we'll use in the next step.</p>
+                </div>
+                
+                <div class="step-box">
+                    <h3>Step 3: PROVE (Inductive Step)</h3>
+                    <p>We need to prove the formula for n = k + 1:</p>
+                    <p>That is, prove: <strong>1 + 2 + 3 + ... + k + (k + 1) = (k + 1)(k + 2)/2</strong></p>
+                    
+                    <p>Start with the left side:</p>
+                    <p>1 + 2 + 3 + ... + k + (k + 1)</p>
+                    <p>= [1 + 2 + 3 + ... + k] + (k + 1)</p>
+                    <p>= [k(k + 1)/2] + (k + 1)  (using our assumption from Step 2)</p>
+                    <p>= k(k + 1)/2 + 2(k + 1)/2  (writing with common denominator)</p>
+                    <p>= [k(k + 1) + 2(k + 1)]/2</p>
+                    <p>= (k + 1)(k + 2)/2  ✅</p>
+                    
+                    <p>This matches the right side for n = k + 1.</p>
+                </div>
+                
+                <div class="principle-box">
+                    <p><strong>Conclusion:</strong> By mathematical induction, the formula is true for all natural numbers n.</p>
+                </div>
+            </section>
+            
+            <section class="card wide-card">
+                <h2>Example 2: Sum of First n Odd Numbers</h2>
+                
+                <p>Let's prove that: <strong>1 + 3 + 5 + ... + (2n - 1) = n²</strong> for all natural numbers n.</p>
+                
+                <div class="step-box">
+                    <h3>Step 1: TEST (Base Case)</h3>
+                    <p>Check if the formula works for n = 1:</p>
+                    <p>Left side: 1 (the first odd number)</p>
+                    <p>Right side: 1² = 1</p>
+                    <p>✅ Both sides equal, so the base case is true.</p>
+                </div>
+                
+                <div class="step-box">
+                    <h3>Step 2: ASSUME (Inductive Hypothesis)</h3>
+                    <p>Assume the formula is true for n = k:</p>
+                    <p><strong>1 + 3 + 5 + ... + (2k - 1) = k²</strong></p>
+                </div>
+                
+                <div class="step-box">
+                    <h3>Step 3: PROVE (Inductive Step)</h3>
+                    <p>We need to prove the formula for n = k + 1:</p>
+                    <p>That is, prove: <strong>1 + 3 + 5 + ... + (2k - 1) + (2(k + 1) - 1) = (k + 1)²</strong></p>
+                    
+                    <p>Start with the left side:</p>
+                    <p>1 + 3 + 5 + ... + (2k - 1) + (2(k + 1) - 1)</p>
+                    <p>= [1 + 3 + 5 + ... + (2k - 1)] + (2k + 2 - 1)</p>
+                    <p>= [1 + 3 + 5 + ... + (2k - 1)] + (2k + 1)</p>
+                    <p>= k² + (2k + 1)  (using our assumption from Step 2)</p>
+                    <p>= k² + 2k + 1</p>
+                    <p>= (k + 1)²  ✅</p>
+                    
+                    <p>This matches the right side for n = k + 1.</p>
+                </div>
+                
+                <div class="principle-box">
+                    <p><strong>Conclusion:</strong> By mathematical induction, the formula is true for all natural numbers n.</p>
+                </div>
+            </section>
+            
+            <section class="card">
+                <h2>Practice Problems ✍️</h2>
+                
+                <div class="example-box">
+                    <p><strong>Problem 1:</strong> Prove that 1² + 2² + 3² + ... + n² = n(n + 1)(2n + 1)/6 for all natural numbers n.</p>
+                </div>
+                
+                <div class="example-box">
+                    <p><strong>Problem 2:</strong> Prove that 1³ + 2³ + 3³ + ... + n³ = [n(n + 1)/2]² for all natural numbers n.</p>
+                </div>
+                
+                <div class="example-box">
+                    <p><strong>Problem 3:</strong> Prove that 7ⁿ - 1 is divisible by 6 for all natural numbers n.</p>
+                </div>
+                
+                <h3>Solutions</h3>
+                
+                <div class="example-box">
+                    <p><strong>Solution 1:</strong></p>
+                    <p><strong>Step 1 (TEST):</strong> For n = 1, LHS = 1² = 1, RHS = 1(2)(3)/6 = 6/6 = 1. ✅</p>
+                    <p><strong>Step 2 (ASSUME):</strong> Assume true for n = k: 1² + 2² + ... + k² = k(k + 1)(2k + 1)/6</p>
+                    <p><strong>Step 3 (PROVE):</strong> For n = k + 1:</p>
+                    <p>LHS = 1² + 2² + ... + k² + (k + 1)²</p>
+                    <p>= [k(k + 1)(2k + 1)/6] + (k + 1)²</p>
+                    <p>= (k + 1)[k(2k + 1)/6 + (k + 1)]</p>
+                    <p>= (k + 1)[(2k² + k) + 6(k + 1)]/6</p>
+                    <p>= (k + 1)(2k² + 7k + 6)/6</p>
+                    <p>= (k + 1)(k + 2)(2k + 3)/6</p>
+                    <p>= (k + 1)[(k + 1) + 1][2(k + 1) + 1]/6 ✅</p>
+                </div>
+                
+                <div class="example-box">
+                    <p><strong>Solution 2:</strong></p>
+                    <p><strong>Step 1 (TEST):</strong> For n = 1, LHS = 1³ = 1, RHS = [1(2)/2]² = 1² = 1. ✅</p>
+                    <p><strong>Step 2 (ASSUME):</strong> Assume true for n = k: 1³ + 2³ + ... + k³ = [k(k + 1)/2]²</p>
+                    <p><strong>Step 3 (PROVE):</strong> For n = k + 1:</p>
+                    <p>LHS = 1³ + 2³ + ... + k³ + (k + 1)³</p>
+                    <p>= [k(k + 1)/2]² + (k + 1)³</p>
+                    <p>= (k + 1)²[k²/4 + (k + 1)]</p>
+                    <p>= (k + 1)²[(k² + 4k + 4)/4]</p>
+                    <p>= (k + 1)²(k + 2)²/4</p>
+                    <p>= [(k + 1)(k + 2)/2]² ✅</p>
+                </div>
+                
+                <div class="example-box">
+                    <p><strong>Solution 3:</strong></p>
+                    <p><strong>Step 1 (TEST):</strong> For n = 1, 7¹ - 1 = 6, which is divisible by 6. ✅</p>
+                    <p><strong>Step 2 (ASSUME):</strong> Assume true for n = k: 7ᵏ - 1 is divisible by 6</p>
+                    <p><strong>Step 3 (PROVE):</strong> For n = k + 1:</p>
+                    <p>7ᵏ⁺¹ - 1 = 7·7ᵏ - 1</p>
+                    <p>= 7·7ᵏ - 7 + 6</p>
+                    <p>= 7(7ᵏ - 1) + 6</p>
+                    <p>Since 7ᵏ - 1 is divisible by 6 (by assumption), and 6 is divisible by 6,</p>
+                    <p>the sum is also divisible by 6. ✅</p>
+                </div>
+            </section>
+            
+            <section class="card">
+                <h2>Common Pitfalls and Tips ⚠️</h2>
+                
+                <div class="concept-box">
+                    <h3>Pitfall 1: Forgetting the Base Case</h3>
+                    <p>Without proving the base case, the entire proof fails. You need to show the first domino falls.</p>
+                </div>
+                
+                <div class="concept-box">
+                    <h3>Pitfall 2: Incorrect Inductive Hypothesis</h3>
+                    <p>Make sure you're assuming the statement for n = k, not for n = k+1.</p>
+                </div>
+                
+                <div class="concept-box">
+                    <h3>Pitfall 3: Not Using the Inductive Hypothesis</h3>
+                    <p>In the inductive step, you must use your assumption that the statement is true for n = k.</p>
+                </div>
+                
+                <div class="concept-box">
+                    <h3>Tip 1: Clearly Label Each Step</h3>
+                    <p>Use clear headings like "Base Case," "Inductive Hypothesis," and "Inductive Step" to organize your proof.</p>
+                </div>
+                
+                <div class="concept-box">
+                    <h3>Tip 2: Practice with Different Types of Problems</h3>
+                    <p>Try proving formulas for sums, divisibility statements, and inequalities to build your skills.</p>
+                </div>
+            </section>
+            
+            <section class="card">
+                <h2>Applications of Mathematical Induction 🌍</h2>
+                
+                <ul>
+                    <li><strong>Number Theory:</strong> Proving divisibility properties and identities</li>
+                    <li><strong>Algebra:</strong> Proving formulas for sums of series</li>
+                    <li><strong>Combinatorics:</strong> Proving counting formulas and binomial identities</li>
+                    <li><strong>Computer Science:</strong> Proving algorithm correctness and complexity</li>
+                    <li><strong>Geometry:</strong> Proving properties of geometric figures</li>
+                    <li><strong>Inequalities:</strong> Proving inequalities like Bernoulli's inequality</li>
+                </ul>
+            </section>
+            
+            <section class="card wide-card">
+                <h2>Quick Recap</h2>
+                <ul>
+                    <li>✅ <strong>Mathematical Induction</strong> = Proof technique for statements about natural numbers</li>
+                    <li>✅ <strong>TAP Method</strong> = Test, Assume, Prove</li>
+                    <li>✅ <strong>Base Case</strong> = Prove for n = 1</li>
+                    <li>✅ <strong>Inductive Hypothesis</strong> = Assume true for n = k</li>
+                    <li>✅ <strong>Inductive Step</strong> = Prove true for n = k + 1 using the hypothesis</li>
+                    <li>✅ <strong>Applications</strong> = Sum formulas, divisibility, inequalities, algorithm analysis</li>
+                </ul>
+            </section>
+            
+            <section class="card wide-card">
+                <h2>Learning Resources</h2>
+                <p>Enhance your understanding with these resources:</p>
+                
+                <div class="resource-links">
+                    <a href="https://youtu.be/Y5ZUmmbNwmo?si=wJ2wE4OVpv0EoM4m" class="btn" target="_blank">
+                        <i class="fab fa-youtube"></i> Watch Video
+                    </a>
+                    
+                    <a href="https://chat.whatsapp.com/FllonNxr7Rh3oxWOM1MTLk?mode=wwt" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Join WhatsApp Group
+                    </a>
+                </div>
+                
+                <div class="creator-link">
+                    <p>Page designed by <a href="https://wa.me/qr/5XXPE2NTKQGSO1" target="_blank"><'KenStack/></a></p>
+                </div>
+            </section>
+        </div>
+        
+        <section class="quiz-section wide-card">
+            <h2>Quiz Time! 🧠</h2>
+            <p>Test your knowledge with 30 questions about Mathematical Induction!</p>
+            
+            <div class="quiz-instructions">
+                <h3><i class="fas fa-info-circle"></i> Quiz Instructions</h3>
+                <p><strong>Topic:</strong> Mathematical Induction</p>
+                <p><strong>Duration:</strong> 25 minutes ⏱️</p>
+                <p><strong>Questions:</strong> 30 multiple-choice questions</p>
+                <p>After submission, you'll receive detailed feedback with your score, percentage, and personalized analysis.</p>
+                <p><strong>Remember:</strong> This is a learning tool to help you identify strengths and areas for improvement.</p>
+            </div>
+            
+            <button id="startQuiz" class="btn">
+                <i class="fas fa-play"></i> Start Quiz Now
+            </button>
+            
+            <div id="quizContainer" class="quiz-container hidden">
+                <div class="timer" id="timer">25:00</div>
+                
+                <div id="questions">
+                    <!-- Questions will be inserted here by JavaScript -->
+                </div>
+                
+                <button id="submitQuiz" class="btn btn-success">
+                    <i class="fas fa-paper-plane"></i> Submit Quiz
+                </button>
+            </div>
+            
+            <div id="results" class="results hidden">
+                <!-- Results will be displayed here -->
+            </div>
+        </section>
+        
+        <section class="homework wide-card">
+            <h2>Homework Assignment</h2>
+            <ul>
+                <li>🎯 Review the TAP method and the three steps of mathematical induction</li>
+                <li>🎯 Watch the YouTube video on Mathematical Induction</li>
+                <li>🎯 Complete the quiz and review any incorrect answers</li>
+                <li>🎯 Prove that 2ⁿ > n for all natural numbers n</li>
+                <li>🎯 Prove that 1·2 + 2·3 + 3·4 + ... + n(n+1) = n(n+1)(n+2)/3</li>
+            </ul>
+        </section>
+        
+        <section class="card wide-card">
+            <h2>End of Class</h2>
+            <p>Excellent work today! 👏</p>
+            <p>If you have any questions about Mathematical Induction, don't hesitate to ask in our WhatsApp group!</p>
+            <p>Keep exploring the fascinating world of mathematics! 🌟</p>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Mathematical Induction Learning Resource &copy; 2025</p>
+            <p>Designed for better understanding of mathematical proof techniques</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create floating background elements
+        function createFloatingElements() {
+            const floatingBg = document.getElementById('floatingBg');
+            const academicIcons = [
+                'fa-square-root-alt', 'fa-calculator', 'fa-infinity', 'fa-plus', 
+                'fa-minus', 'fa-times', 'fa-divide', 'fa-equals', 'fa-percentage',
+                'fa-superscript', 'fa-subscript', 'fa-sigma', 'fa-pi', 'fa-function'
+            ];
+            
+            // Create floating icons
+            for (let i = 0; i < 20; i++) {
+                const icon = document.createElement('i');
+                icon.className = `floating-element fas ${academicIcons[Math.floor(Math.random() * academicIcons.length)]}`;
+                icon.style.left = `${Math.random() * 100}%`;
+                icon.style.animationDelay = `${Math.random() * 20}s`;
+                icon.style.fontSize = `${Math.random() * 20 + 15}px`;
+                floatingBg.appendChild(icon);
+            }
+            
+            // Create floating bubbles
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'floating-bubble';
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 15}s`;
+                bubble.style.width = `${Math.random() * 40 + 10}px`;
+                bubble.style.height = bubble.style.width;
+                floatingBg.appendChild(bubble);
+            }
+        }
+        
+        // Initialize floating elements
+        createFloatingElements();
+
+        // Quiz questions array (30 questions)
+        const quizQuestions = [
+            {
+                question: "What is the first step in a mathematical induction proof?",
+                options: [
+                    "Assume the statement is true for n = k",
+                    "Prove the statement is true for n = k + 1",
+                    "Prove the statement is true for n = 1",
+                    "State the conclusion"
+                ],
+                correct: 2,
+                explanation: "The first step in mathematical induction is to prove the base case, which is typically n = 1. This establishes that the statement is true for the first natural number."
+            },
+            {
+                question: "In the inductive step of mathematical induction, what do we assume?",
+                options: [
+                    "The statement is true for n = 1",
+                    "The statement is true for n = k",
+                    "The statement is true for n = k + 1",
+                    "The statement is false for n = k"
+                ],
+                correct: 1,
+                explanation: "In the inductive step, we assume the statement is true for n = k (the inductive hypothesis), and then use this assumption to prove it's true for n = k + 1."
+            },
+            {
+                question: "Which of the following best describes mathematical induction?",
+                options: [
+                    "A method for solving equations",
+                    "A technique for proving statements about natural numbers",
+                    "A way to find limits of sequences",
+                    "A method for calculating derivatives"
+                ],
+                correct: 1,
+                explanation: "Mathematical induction is a proof technique used to prove that a statement is true for all natural numbers."
+            },
+            {
+                question: "What is the purpose of the base case in mathematical induction?",
+                options: [
+                    "To assume the statement is true",
+                    "To prove the statement for a general case",
+                    "To establish that the statement is true for the first value",
+                    "To conclude the proof"
+                ],
+                correct: 2,
+                explanation: "The base case establishes that the statement is true for the initial value (usually n = 1), which serves as the foundation for the inductive step."
+            },
+            {
+                question: "If we've proven the base case and the inductive step, what can we conclude?",
+                options: [
+                    "The statement is true for n = 1 only",
+                    "The statement is true for n = k only",
+                    "The statement is true for all natural numbers",
+                    "The statement is true for some natural numbers"
+                ],
+                correct: 2,
+                explanation: "If both the base case and inductive step are proven, we can conclude that the statement is true for all natural numbers."
+            },
+            {
+                question: "Which of the following is the correct inductive hypothesis for proving 1 + 2 + 3 + ... + n = n(n+1)/2?",
+                options: [
+                    "Assume 1 + 2 + 3 + ... + k = k(k+1)/2",
+                    "Assume 1 + 2 + 3 + ... + k = (k+1)(k+2)/2",
+                    "Assume 1 + 2 + 3 + ... + n = n(n+1)/2",
+                    "Assume 1 + 2 + 3 + ... + k = k(k-1)/2"
+                ],
+                correct: 0,
+                explanation: "The inductive hypothesis assumes the statement is true for n = k, so we assume 1 + 2 + 3 + ... + k = k(k+1)/2."
+            },
+            {
+                question: "What is the common analogy used to explain mathematical induction?",
+                options: [
+                    "A chain reaction",
+                    "Falling dominoes",
+                    "A mathematical function",
+                    "A geometric progression"
+                ],
+                correct: 1,
+                explanation: "The falling dominoes analogy is commonly used: if the first domino falls (base case), and if each domino knocks over the next one (inductive step), then all dominoes will fall."
+            },
+            {
+                question: "In the inductive step, what are we trying to prove?",
+                options: [
+                    "The statement is true for n = 1",
+                    "The statement is true for n = k",
+                    "The statement is true for n = k + 1",
+                    "The statement is true for all n"
+                ],
+                correct: 2,
+                explanation: "In the inductive step, we use the assumption that the statement is true for n = k to prove that it's true for n = k + 1."
+            },
+            {
+                question: "Which of the following statements can be proven using mathematical induction?",
+                options: [
+                    "The Pythagorean theorem",
+                    "1 + 2 + 3 + ... + n = n(n+1)/2 for all natural numbers n",
+                    "The quadratic formula",
+                    "The definition of derivative"
+                ],
+                correct: 1,
+                explanation: "Mathematical induction is used to prove statements that are claimed to be true for all natural numbers, such as formulas for sums of series."
+            },
+            {
+                question: "What is the TAP method in mathematical induction?",
+                options: [
+                    "Test, Apply, Prove",
+                    "Test, Assume, Prove",
+                    "Think, Assume, Prove",
+                    "Test, Apply, Process"
+                ],
+                correct: 1,
+                explanation: "The TAP method stands for Test (base case), Assume (inductive hypothesis), Prove (inductive step)."
+            },
+            {
+                question: "If the base case is n = 1, what value do we typically use in the inductive hypothesis?",
+                options: [
+                    "n = 0",
+                    "n = 1",
+                    "n = k",
+                    "n = k + 1"
+                ],
+                correct: 2,
+                explanation: "In the inductive hypothesis, we assume the statement is true for n = k, where k is an arbitrary natural number."
+            },
+            {
+                question: "What is the main logical principle behind mathematical induction?",
+                options: [
+                    "If P(1) is true and P(k) implies P(k+1), then P(n) is true for all n",
+                    "If P(1) is true, then P(n) is true for all n",
+                    "If P(k) implies P(k+1), then P(n) is true for all n",
+                    "If P(1) and P(2) are true, then P(n) is true for all n"
+                ],
+                correct: 0,
+                explanation: "The principle of mathematical induction states that if P(1) is true (base case) and P(k) implies P(k+1) for all k (inductive step), then P(n) is true for all natural numbers n."
+            },
+            {
+                question: "Which of the following is NOT a step in mathematical induction?",
+                options: [
+                    "Base case",
+                    "Inductive hypothesis",
+                    "Inductive step",
+                    "Counterexample"
+                ],
+                correct: 3,
+                explanation: "The steps in mathematical induction are: 1) Base case, 2) Inductive hypothesis (assumption), 3) Inductive step. Finding a counterexample is not part of the induction process."
+            },
+            {
+                question: "What should you do if you cannot prove the inductive step?",
+                options: [
+                    "Assume it's true anyway",
+                    "Try a different value for the base case",
+                    "Check if the statement is actually true",
+                    "All of the above"
+                ],
+                correct: 2,
+                explanation: "If you cannot prove the inductive step, it might mean the statement is not true for all natural numbers. You should check if the statement is actually true, possibly by testing specific values."
+            },
+            {
+                question: "In proving that 2ⁿ > n for all natural numbers n, what would be the base case?",
+                options: [
+                    "n = 0",
+                    "n = 1",
+                    "n = 2",
+                    "n = k"
+                ],
+                correct: 1,
+                explanation: "For statements about natural numbers, the base case is typically n = 1. For n = 1, 2¹ = 2 > 1, so the base case holds."
+            },
+            {
+                question: "Which of the following is a common mistake in mathematical induction proofs?",
+                options: [
+                    "Proving the base case",
+                    "Using the inductive hypothesis in the inductive step",
+                    "Assuming what you're trying to prove",
+                    "Stating the conclusion clearly"
+                ],
+                correct: 2,
+                explanation: "A common mistake is circular reasoning - assuming what you're trying to prove. In the inductive step, you should assume P(k) is true and use it to prove P(k+1), not assume P(k+1) is true."
+            },
+            {
+                question: "What is the inductive hypothesis in proving that 7ⁿ - 1 is divisible by 6?",
+                options: [
+                    "Assume 7ᵏ - 1 is divisible by 6",
+                    "Assume 7ᵏ⁺¹ - 1 is divisible by 6",
+                    "Assume 7¹ - 1 is divisible by 6",
+                    "Assume 7ⁿ - 1 is divisible by 6 for all n"
+                ],
+                correct: 0,
+                explanation: "The inductive hypothesis assumes the statement is true for n = k, so we assume 7ᵏ - 1 is divisible by 6."
+            },
+            {
+                question: "In the proof of 1 + 3 + 5 + ... + (2n-1) = n², what is added in the inductive step?",
+                options: [
+                    "2k",
+                    "2k - 1",
+                    "2k + 1",
+                    "k²"
+                ],
+                correct: 2,
+                explanation: "In the inductive step, we go from n = k to n = k + 1, so we add the (k+1)th term, which is 2(k+1) - 1 = 2k + 1."
+            },
+            {
+                question: "What is the purpose of mathematical induction?",
+                options: [
+                    "To solve equations",
+                    "To prove statements for all natural numbers",
+                    "To find limits",
+                    "To calculate derivatives"
+                ],
+                correct: 1,
+                explanation: "The purpose of mathematical induction is to prove that a statement is true for all natural numbers."
+            },
+            {
+                question: "Which of the following can be proven using mathematical induction?",
+                options: [
+                    "The sum of angles in a triangle is 180 degrees",
+                    "1² + 2² + 3² + ... + n² = n(n+1)(2n+1)/6 for all natural numbers n",
+                    "The Pythagorean theorem",
+                    "The quadratic formula"
+                ],
+                correct: 1,
+                explanation: "Mathematical induction is used to prove statements that are claimed to be true for all natural numbers, such as formulas for sums of series."
+            },
+            {
+                question: "What is the base case typically in mathematical induction?",
+                options: [
+                    "n = 0",
+                    "n = 1",
+                    "n = k",
+                    "n = k + 1"
+                ],
+                correct: 1,
+                explanation: "The base case is typically n = 1, as natural numbers usually start from 1. However, sometimes the base case might be n = 0 or another initial value depending on the statement."
+            },
+            {
+                question: "In the inductive step, what do we do with the inductive hypothesis?",
+                options: [
+                    "Ignore it",
+                    "Prove it",
+                    "Use it to prove the statement for n = k + 1",
+                    "Assume it's false"
+                ],
+                correct: 2,
+                explanation: "In the inductive step, we use the inductive hypothesis (the assumption that the statement is true for n = k) to prove that the statement is true for n = k + 1."
+            },
+            {
+                question: "What is the conclusion of a mathematical induction proof?",
+                options: [
+                    "The statement is true for n = 1",
+                    "The statement is true for n = k",
+                    "The statement is true for n = k + 1",
+                    "The statement is true for all natural numbers n"
+                ],
+                correct: 3,
+                explanation: "After proving both the base case and the inductive step, we conclude that the statement is true for all natural numbers n."
+            },
+            {
+                question: "Which of the following is an example of a statement that can be proven by mathematical induction?",
+                options: [
+                    "2 + 2 = 4",
+                    "1 + 2 + 3 + ... + n = n(n+1)/2 for all natural numbers n",
+                    "The square root of 2 is irrational",
+                    "There are infinitely many prime numbers"
+                ],
+                correct: 1,
+                explanation: "Mathematical induction is used to prove statements that involve a variable n and claim that something is true for all natural numbers n."
+            },
+            {
+                question: "What is the role of k in mathematical induction?",
+                options: [
+                    "It is a specific number",
+                    "It is an arbitrary natural number",
+                    "It is always equal to 1",
+                    "It is the last natural number"
+                ],
+                correct: 1,
+                explanation: "In the inductive hypothesis, k represents an arbitrary natural number. We assume the statement is true for this arbitrary k, and then prove it for k+1."
+            },
+            {
+                question: "In the proof of 1 + 2 + 3 + ... + n = n(n+1)/2, what is the common denominator used in the inductive step?",
+                options: [
+                    "1",
+                    "2",
+                    "n",
+                    "k"
+                ],
+                correct: 1,
+                explanation: "In the inductive step, we have k(k+1)/2 + (k+1). To combine these, we use the common denominator 2, writing (k+1) as 2(k+1)/2."
+            },
+            {
+                question: "What is the first term in the sum 1 + 2 + 3 + ... + n?",
+                options: [
+                    "0",
+                    "1",
+                    "n",
+                    "n(n+1)/2"
+                ],
+                correct: 1,
+                explanation: "The sum 1 + 2 + 3 + ... + n starts with 1 and ends with n."
+            },
+            {
+                question: "Which of the following is true about mathematical induction?",
+                options: [
+                    "It can be used to prove statements about real numbers",
+                    "It is only used for proving sum formulas",
+                    "It is a method for proving statements about natural numbers",
+                    "It is the same as proof by contradiction"
+                ],
+                correct: 2,
+                explanation: "Mathematical induction is specifically designed for proving statements about natural numbers."
+            },
+            {
+                question: "What is the formula for the sum of the first n natural numbers?",
+                options: [
+                    "n(n-1)/2",
+                    "n(n+1)/2",
+                    "n²",
+                    "2n"
+                ],
+                correct: 1,
+                explanation: "The sum of the first n natural numbers is given by the formula n(n+1)/2."
+            },
+            {
+                question: "In mathematical induction, after proving the base case and inductive step, what can we conclude?",
+                options: [
+                    "The statement is true for n = 1",
+                    "The statement is true for n = k",
+                    "The statement is true for n = k + 1",
+                    "The statement is true for all natural numbers n"
+                ],
+                correct: 3,
+                explanation: "After proving both the base case and the inductive step, we conclude that the statement is true for all natural numbers n."
+            }
+        ];
+
+        // Quiz functionality
+        document.getElementById('startQuiz').addEventListener('click', startQuiz);
+        document.getElementById('submitQuiz').addEventListener('click', submitQuiz);
+
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        let timerInterval;
+        let userAnswers = [];
+
+        function startQuiz() {
+            document.getElementById('startQuiz').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            
+            // Display questions
+            const questionsContainer = document.getElementById('questions');
+            quizQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <h3>Question ${index + 1}</h3>
+                    <p>${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((option, optIndex) => `
+                            <div class="option" data-question="${index}" data-option="${optIndex}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                questionsContainer.appendChild(questionDiv);
+            });
+
+            // Add event listeners to options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', selectOption);
+            });
+
+            // Start timer
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            // Initialize user answers array
+            userAnswers = new Array(quizQuestions.length).fill(-1);
+        }
+
+        function selectOption(e) {
+            const questionIndex = parseInt(e.target.getAttribute('data-question'));
+            const optionIndex = parseInt(e.target.getAttribute('data-option'));
+            
+            // Remove selected class from all options in this question
+            const options = document.querySelectorAll(`.option[data-question="${questionIndex}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            e.target.classList.add('selected');
+            
+            // Store user's answer
+            userAnswers[questionIndex] = optionIndex;
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitQuiz();
+            }
+        }
+
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            let correctCount = 0;
+            quizQuestions.forEach((q, index) => {
+                if (userAnswers[index] === q.correct) {
+                    correctCount++;
+                }
+            });
+            
+            const score = correctCount;
+            const percentage = Math.round((correctCount / quizQuestions.length) * 100);
+            
+            // Display results
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.classList.remove('hidden');
+            
+            // Generate feedback
+            let strengths = [];
+            let improvements = [];
+            
+            // Analyze performance by category
+            let basicConceptsCorrect = 0, basicConceptsTotal = 0;
+            let stepsCorrect = 0, stepsTotal = 0;
+            let applicationsCorrect = 0, applicationsTotal = 0;
+            
+            quizQuestions.forEach((q, index) => {
+                // Categorize questions (simplified approach)
+                const questionText = q.question.toLowerCase();
+                if (questionText.includes("what is") || questionText.includes("purpose") || questionText.includes("describe")) {
+                    basicConceptsTotal++;
+                    if (userAnswers[index] === q.correct) basicConceptsCorrect++;
+                } else if (questionText.includes("step") || questionText.includes("base case") || questionText.includes("inductive")) {
+                    stepsTotal++;
+                    if (userAnswers[index] === q.correct) stepsCorrect++;
+                } else if (questionText.includes("example") || questionText.includes("prove") || questionText.includes("formula")) {
+                    applicationsTotal++;
+                    if (userAnswers[index] === q.correct) applicationsCorrect++;
+                }
+            });
+            
+            // Determine strengths and areas for improvement
+            if (basicConceptsTotal > 0 && basicConceptsCorrect / basicConceptsTotal >= 0.7) strengths.push("understanding the basic concepts of mathematical induction");
+            else if (basicConceptsTotal > 0) improvements.push("reviewing the fundamental concepts of mathematical induction");
+            
+            if (stepsTotal > 0 && stepsCorrect / stepsTotal >= 0.7) strengths.push("understanding the steps of mathematical induction");
+            else if (stepsTotal > 0) improvements.push("practicing the TAP method (Test, Assume, Prove)");
+            
+            if (applicationsTotal > 0 && applicationsCorrect / applicationsTotal >= 0.7) strengths.push("applying mathematical induction to various problems");
+            else if (applicationsTotal > 0) improvements.push("practicing applications of mathematical induction");
+            
+            // If no specific strengths identified, add generic ones
+            if (strengths.length === 0) {
+                strengths = ["basic understanding of mathematical induction concepts"];
+            }
+            
+            // Generate detailed feedback with explanations for incorrect answers
+            let detailedFeedback = "<h3>Question Review</h3>";
+            quizQuestions.forEach((q, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === q.correct;
+                
+                detailedFeedback += `
+                    <div class="feedback">
+                        <p><strong>Question ${index + 1}:</strong> ${q.question}</p>
+                        <p>Your answer: ${userAnswer !== -1 ? q.options[userAnswer] : "Not answered"} 
+                        ${isCorrect ? '<span style="color:green">✓ Correct</span>' : '<span style="color:red">✗ Incorrect</span>'}</p>
+                        ${!isCorrect ? `<p>Correct answer: ${q.options[q.correct]}</p>` : ''}
+                        <p><strong>Explanation:</strong> ${q.explanation}</p>
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = `
+                <h2>Quiz Results</h2>
+                <div class="score">${score}/${quizQuestions.length} (${percentage}%)</div>
+                
+                <div class="feedback">
+                    <h3>Performance Analysis</h3>
+                    <p><span class="strength">Strengths:</span> ${strengths.join(', ')}</p>
+                    <p><span class="improvement">Areas for Improvement:</span> ${improvements.join(', ')}</p>
+                    
+                    <h4>How to Improve:</h4>
+                    <ul>
+                        <li>Review the TAP method and the three steps of mathematical induction</li>
+                        <li>Practice more problems using mathematical induction</li>
+                        <li>Watch the recommended video on Mathematical Induction</li>
+                        <li>Join our WhatsApp group for discussion and clarification</li>
+                    </ul>
+                </div>
+                
+                <p>${percentage >= 80 ? 'Excellent work! You have a strong understanding of Mathematical Induction.' : 
+                    percentage >= 60 ? 'Good job! You understand the basics but could benefit from more practice.' : 
+                    'Keep studying! Review the material and try the quiz again to improve your understanding.'}</p>
+                
+                ${detailedFeedback}
+                
+                <button id="retryQuiz" class="btn">Retry Quiz</button>
+            `;
+            
+            document.getElementById('retryQuiz').addEventListener('click', function() {
+                location.reload();
+            });
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
